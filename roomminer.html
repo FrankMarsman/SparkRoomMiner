@@ -7,10 +7,20 @@
   <h1>Hello World</h1>
 
 
+  <img id="imgShow" width="128" height="128">
+  <br/>
+  <input type="text" id="roomInp" value="Y2lzY29zcGFyazovL3VzL1JPT00vYzMzNDdiZjAtYmIxYS0xMWU3LTlkMjQtODlhMjBiYzg0NTQ0">
+  <br/>
+  <button id="roomBut">Get room participants</button>
+  <br/>
+  <br/>
+  <font id="hans" face="courier">Results</font>
 
-  <p>If you click on me, I will disappear.</p>
-  <p>Click me away!</p>
-  <p>Click me too!</p>
+
+
+
+
+
 
 
 
@@ -18,15 +28,15 @@
   <!-- Only load code after body has loaded -->
   <script type="text/javascript">
     function downloadJSAtOnload() {
-        var element = document.createElement("script");
-        element.src = "jscode.js";
-        document.body.appendChild(element);
-    }
+      var element = document.createElement("script");
+      element.src = "jscode.js";
+      document.body.appendChild(element);
+    } // downloadJSAtOnload
 
     if (window.addEventListener)
-        window.addEventListener("load", downloadJSAtOnload, false);
+      window.addEventListener("load", downloadJSAtOnload, false);
     else if (window.attachEvent)
-        window.attachEvent("onload", downloadJSAtOnload);
+      window.attachEvent("onload", downloadJSAtOnload);
     else window.onload = downloadJSAtOnload;
   </script>
 
