@@ -63,66 +63,59 @@ body {
   opacity: 0.5;
 }
 
+
 .rcontainer {
-    position: relative;
-    width: 50%;
+  position: relative;
+  width: 50%;
+  max-width: 300px;
 }
 
 .rimage {
-  opacity: 1;
   display: block;
   width: 100%;
   height: auto;
-  transition: .5s ease;
-  backface-visibility: hidden;
-  border-radius: 4%;
+  border-radius: 10px;
 }
 
-.rmiddle {
-  transition: .5s ease;
-  opacity: 0;
+.roverlay {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
+  bottom: 0;
+  background: rgb(0, 0, 0);
+  background: rgba(0, 0, 0, 0.5); /* Black see-through */
+  color: #f1f1f1;
+  width: 100%;
+  transition: .5s ease;
+  opacity:0;
+  color: white;
+  font-size: 20px;
+  padding: 20px;
   text-align: center;
+  border-radius: 10px;
 }
 
-.rcontainer:hover .rimage {
-  opacity: 0.3;
-}
-
-.rcontainer:hover .rmiddle {
+.rcontainer:hover .roverlay {
   opacity: 1;
 }
 
-.rtext {
-  background-color: #4CAF50;
-  color: white;
-  font-size: 16px;
-  padding: 16px 32px;
-}
 </style>
 </head>
 
 <body>
   <center>
-    <table style="width:80%">
+    <table style="width:90%">
       <tr>
-        <th width="50%">
+        <th width="50%" valign="top">
           <div class="header">
-            <h1>People in room</h1>
+            <h1>Unknown Faces:</h1>
             <h4 id="faceNameHolder" style="font-style:italic">...</h4>
-            <p>room:
-            <!-- <input type="text" id="roomInp" value="Y2lzY29zcGFyazovL3VzL1JPT00vYzMzNDdiZjAtYmIxYS0xMWU3LTlkMjQtODlhMjBiYzg0NTQ0"> -->
-            <input type="text" id="roomInp" value="Y2lzY29zcGFyazovL3VzL1JPT00vZTUwN2ZiMTAtYWNkMC0xMWU3LWE3OGItODkyZTk5MDQwNWFh">
 
-            <button id="roomBut">Get room participants</button></p>
+            <button id="roomBut">Get room participants</button>
+            <select id="roomselect"></select>
+
           </div>
           <center>
-            <div style="max-width : 80%">
-              <div id="facecontainer" class="row">Results</div>
+            <div style="max-width : 90%; padding-top:20px; overflow-y:scroll; height:700px">
+              <div id="facecontainer" class="row"></div>
             </div>
           </center>
         </th>
@@ -130,12 +123,20 @@ body {
           <center>
             <p id="rinfo">...</p>
             <div class="rcontainer">
+              <img src="defaultface.png" id="rfaceimage" alt="Avatar" class="rimage">
+              <div class="roverlay" id="rfacetext">nobody</div>
+            </div>
+
+
+            <!--<p id="rinfo">...</p>
+            <div class="rcontainer">
               <img src="defaultface.png" id="rfaceimage" class="rimage" style="width:400px; height:400px">
               <div class="rmiddle">
                 <div class="rtext" id="rfacetext">John Doe</div>
               </div>
             </div>
-
+          -->
+            <br/>
             <button id="removefacebutton">I know this face</button>
             <button id="nextfacebutton">Next face</button>
 
