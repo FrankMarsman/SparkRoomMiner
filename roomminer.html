@@ -1,23 +1,149 @@
 <head>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+  <style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial;
+}
+
+.header {
+    text-align: center;
+    padding: 32px;
+}
+
+.row {
+    display: -ms-flexbox; /* IE10 */
+    display: flex;
+    -ms-flex-wrap: wrap; /* IE10 */
+    flex-wrap: wrap;
+    padding: 0 4px;
+}
+
+/* Create four equal columns that sits next to each other */
+.pcolumn {
+    -ms-flex: 25%; /* IE10 */
+    flex: 25%;
+    max-width: 25%;
+    padding: 0 4px;
+}
+
+.pcolumn img {
+    margin-top: 8px;
+    vertical-align: middle;
+}
+
+/* Responsive layout - makes a two column-layout instead of four columns */
+@media (max-width: 800px) {
+    .pcolumn {
+        -ms-flex: 50%;
+        flex: 50%;
+        max-width: 50%;
+    }
+}
+
+/* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
+@media (max-width: 600px) {
+    .pcolumn {
+        -ms-flex: 100%;
+        flex: 100%;
+        max-width: 100%;
+    }
+}
+
+.faceimg {
+    border-radius: 4%;
+}
+
+.faceimg:hover {
+  opacity: 0.5;
+}
+
+.rcontainer {
+    position: relative;
+    width: 50%;
+}
+
+.rimage {
+  opacity: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: .5s ease;
+  backface-visibility: hidden;
+  border-radius: 4%;
+}
+
+.rmiddle {
+  transition: .5s ease;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.rcontainer:hover .rimage {
+  opacity: 0.3;
+}
+
+.rcontainer:hover .rmiddle {
+  opacity: 1;
+}
+
+.rtext {
+  background-color: #4CAF50;
+  color: white;
+  font-size: 16px;
+  padding: 16px 32px;
+}
+</style>
 </head>
 
 <body>
+  <center>
+    <table style="width:80%">
+      <tr>
+        <th width="50%">
+          <div class="header">
+            <h1>People in room</h1>
+            <h4 id="faceNameHolder" style="font-style:italic">...</h4>
+            <p>room:
+            <!-- <input type="text" id="roomInp" value="Y2lzY29zcGFyazovL3VzL1JPT00vYzMzNDdiZjAtYmIxYS0xMWU3LTlkMjQtODlhMjBiYzg0NTQ0"> -->
+            <input type="text" id="roomInp" value="Y2lzY29zcGFyazovL3VzL1JPT00vZTUwN2ZiMTAtYWNkMC0xMWU3LWE3OGItODkyZTk5MDQwNWFh">
 
-  <h1>Hello World</h1>
+            <button id="roomBut">Get room participants</button></p>
+          </div>
+          <center>
+            <div style="max-width : 80%">
+              <div id="facecontainer" class="row">Results</div>
+            </div>
+          </center>
+        </th>
+        <th valign="top" style="padding-top:50px">
+          <center>
+            <p id="rinfo">...</p>
+            <div class="rcontainer">
+              <img src="defaultface.png" id="rfaceimage" class="rimage" style="width:400px; height:400px">
+              <div class="rmiddle">
+                <div class="rtext" id="rfacetext">John Doe</div>
+              </div>
+            </div>
 
+            <button id="removefacebutton">I know this face</button>
+            <button id="nextfacebutton">Next face</button>
 
-  <img id="imgShow" width="128" height="128">
-  <br/>
-  <input type="text" id="roomInp" value="Y2lzY29zcGFyazovL3VzL1JPT00vYzMzNDdiZjAtYmIxYS0xMWU3LTlkMjQtODlhMjBiYzg0NTQ0">
-  <br/>
-  <button id="roomBut">Get room participants</button>
-  <br/>
-  <br/>
-  <font id="hans" face="courier">Results</font>
-
-
-
+          </center>
+        </th>
+      </tr>
+    </table>
+  </center>
 
 
 
