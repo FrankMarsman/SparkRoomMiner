@@ -8,13 +8,27 @@ var AUT = "Bearer " + TKN;
 var PERSONS = [ ] // array of all participants
 var UNKNOWNS = [ ]; // list of unknown people (indices)
 var ROOM_LIST = [ ];
+var PIDS = [ ]; // list of ids of persons
 var CUR_UNKNOWN = 0;
+var PIDS_INDEX = 0;
+var LAST_NSHOW = new Date( );
+
+// checks if last name show is > x seconds ago,
+// if so, faceNameHolder will be cleaned (text set to "...")
+function CheckNShow( ) {
+  var curDate = new Date();
+  var seconds = (curDate.getTime( ) - LAST_NSHOW.getTime( )) / 1000;
+  if (seconds >= 3) {
+    document.getElementById("faceNameHolder").innerHTML = "...";
+  } // if
+  setTimeout(CheckNShow, 1000);
+} // CheckNShow
 
 function DispNameLeft(faceNr) {
   if (faceNr >= 0 && faceNr < PERSONS.length) {
     document.getElementById("faceNameHolder").innerHTML = PERSONS[faceNr].name;
+    LAST_NSHOW = new Date( );
   } // if
-  setTimeout(function(){ document.getElementById("faceNameHolder").innerHTML = "..."; }, 3000);
 } // DispNameLeft
 
 // displays face [UNKNOWNS[n]]
@@ -90,6 +104,57 @@ function ShowPersonList( ) {
   } // for
 } // ShowPersonList
 
+// puts all persons in results in PIDS
+function PreloadParticipants(result) {
+  PIDS = [ ];
+  PIDS_INDEX = 0;
+  for (x in result["items"]) {
+    var personId = result["items"][x].personId;
+    PIDS[PIDS.length] = personId;
+  } // for
+  ProcessPerson( );
+} // PreloadParticipants
+
+// takes element from PIDS and loads person and puts result
+// in PERSONS, until we've had all elements in PIDS
+function ProcessPerson( ) {
+  if (PIDS_INDEX >= PIDS.length) {
+    console.log("Done with loading persons");
+    return;
+  } // if
+  console.log("Loading person " + PIDS_INDEX);
+  var personId = PIDS[PIDS_INDEX];
+  var _url = "https://api.ciscospark.com/v1/people/" + personId;
+  var _header = {"Authorization" : AUT, "Content-type" : CNT};
+
+  jQuery.ajax({
+    url: _url,
+    type: "GET",
+    headers: _header,
+    success: function(result) {
+      if (result.type == "person") {
+        if (result.hasOwnProperty('avatar')) {
+          var person = new Object;
+          person.name = result.displayName;
+          person.imgURL = result.avatar;
+          person.id = result.id;
+
+          PERSONS[PERSONS.length] = person;
+
+          // update UNKNOWNS:
+          UNKNOWNS = [];
+          for (var n = 0; n < PERSONS.length; n++)
+            UNKNOWNS[n] = n;
+
+          SetRFace(0);
+          ShowPersonList( );
+        } // if
+      } // if
+    } // function
+  }); // jQuery.ajax
+  PIDS_INDEX = PIDS_INDEX + 1;
+  setTimeout(ProcessPerson, 1000);
+} // ProcessPerson
 
 // loops through result to get all participants
 function ProcessParticipants(result) {
@@ -125,6 +190,13 @@ function ProcessParticipants(result) {
       } // function
     }); // jQuery.ajax
 
+    // now wait a bit:
+    var initTime = new Date( );
+    var curTime = new Date( );
+    while ((curTime.getTime( ) - initTime.getTime( )) < 500) {
+      curTime = new Date( );
+    } // while
+
   } // for
 } // ProcessParticipants
 
@@ -138,6 +210,7 @@ function GetRoomParticipants( ) {
   if (roomNr >= 0 && roomNr < ROOM_LIST.length) {
     _roomId = ROOM_LIST[roomNr].id;
     console.log("Selected room" + ROOM_LIST[roomNr].name);
+    console.log(ROOM_LIST[roomNr].id);
   } // if
   else {
     alert("Invalid roomNr!");
@@ -145,7 +218,7 @@ function GetRoomParticipants( ) {
   } // else
   var _url = "https://api.ciscospark.com/v1/memberships";
   var _header = {"Authorization" : AUT, "Content-type" : CNT};
-  var _params = {"roomId" : _roomId};
+  var _params = {"roomId" : _roomId, "max" : 1000};
 
   PERSONS = [ ];
   UNKNOWNS = [ ];
@@ -156,8 +229,9 @@ function GetRoomParticipants( ) {
     type: "GET",
     headers: _header,
     data: _params,
-    success: function(result) {
-      ProcessParticipants(result);
+    success: function(result, status, xhr) {
+      //ProcessParticipants(result);
+      PreloadParticipants(result);
     } // function
   }); // jQuery.ajax
 } // GetRoomParticipants
@@ -194,7 +268,7 @@ function GetRooms( ) {
         temp.id = roomId;
         temp.name = roomName;
         ROOM_LIST[ROOM_LIST.length] = temp;
-        console.log(roomName);
+        //console.log(roomName);
         var option = document.createElement("option");
         option.text = roomName;
         select.add(option);
@@ -207,4 +281,5 @@ document.getElementById("roomBut").onclick = GetRoomParticipants;
 document.getElementById("nextfacebutton").onclick = NextRFace;
 document.getElementById("removefacebutton").onclick = RemoveCurrentRFace;
 
+CheckNShow( );
 GetRooms( );
