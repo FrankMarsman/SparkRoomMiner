@@ -4,6 +4,7 @@ SE = \frac{\sigma}{\sqrt{n}}
 ```
 
 Test:
+<pre xml:lang="latex">\sqrt{2}</pre>
 
 $`\sqrt{2}`$
  DOes not work.
